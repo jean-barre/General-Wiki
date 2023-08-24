@@ -99,6 +99,7 @@ prompt pure
 #
 # Aliases
 alias trc="python -m serial.tools.miniterm --filter direct -e"
+alias gtkterm="sudo -b gtkterm"
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 source ~/.vim/plugged/fzf/shell/key-bindings.zsh
@@ -108,47 +109,42 @@ source ~/.vim/plugged/fzf/shell/completion.zsh
 if [[ -z $TMUX ]]; then
     # Edit PATH
     export PATH="$PATH:/sbin"
-    # Qt 5.12
-    export PATH="$PATH:/usr/local/Qt-5.12.5/bin"
+
+    # Qt 5.15.2
+    export PATH="$PATH:/usr/local/Qt-5.15.2/bin"
     # QtCreator
     #export PATH="$PATH:/home/jean/QtCreator/Tools/QtCreator/bin"
+
     # OpenJDK
-    #export PATH="$JAVA_HOME/bin:$PATH"
+    #export JAVA_HOME="/usr/local/jdk-14"
+    #export PATH="$PATH:$JAVA_HOME/bin"
     # Android SDK tools
-    export ANDROID_HOME="/home/jean/Android/SDK"
-    export PATH="$PATH:$ANDROID_HOME/platform-tools"
-    export PATH="$PATH:$ANDROID_HOME/tools"
-    # Android NDK
-    export ANDROID_NDK_HOME="$ANDROID_HOME/ndk-bundle"
-    # Android Studio
-    export JAVA_HOME="/home/jean/android-studio/jre"
-    export PATH="$PATH:$JAVA_HOME/bin"
-    # Add flatc to the PATH
-    #export PATH="$HOME/local/flatbuffers/bin:$PATH"
-    # Add local version of LUA to the PATH
-    #export PATH="$HOME/local/lua/bin:$PATH"
-    # Add openssl to the PATH
-    #export LUA_PATH="$HOME/local/lua/share/lua/5.3/?.lua;;"
-    #export LUA_CPATH="$HOME/local/lua/lib/lua/5.3/?.so;;"
-    # Add gcc arm
-    #export PATH="$HOME/local/gcc-arm-none-eabi-4_9-2015q2/bin/:$PATH"
+    #export ANDROID_HOME="/home/jean/android"
+    #export PATH="$PATH:$ANDROID_HOME/platform-tools"
+    #export PATH="$PATH:$ANDROID_HOME/tools"
+    ## Android NDK
+    #export ANDROID_NDK_HOME="$ANDROID_HOME/ndk-bundle"
     # Add local openssl
     #export PATH="/usr/local/opt/openssl/bin:$PATH"
+
+    # Sonar Scanner
+    #export PATH="$PATH:/home/jean/Desktop/sonar-scanner/bin"
 
     # Edit PKG_CONFIG_PATH
     # Add openssl and libpcap pkg-config
     export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/opt/openssl/lib/pkgconfig"
     export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/opt/libpcap/lib/pkgconfig"
+    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/lib/x86_64-linux-gnu/pkgconfig"
 
     # Add libpcap flags for compilation
     export LDFLAGS="-L/usr/local/opt/libpcap/lib"
     export CPPFLAGS="-I/usr/local/opt/libpcap/include"
 
     # Edit LD_LIBRARY_PATH
-    export LD_LIBRARY_PATH="/usr/local/lib"
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"/usr/local/lib"
     # LibXCB
-    #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"/usr/local/Qt-5.12.5/lib"
-    #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"/lib/x86_64-linux-gnu"
+    #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"/usr/local/Qt-5.15.2/lib"
+    #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"/usr/lib/x86_64-linux-gnu"
 
     # vim as default editor
     export VISUAL=vim
@@ -161,7 +157,8 @@ if [[ -z $TMUX ]]; then
 fi
 export LD_LIBRARY_PATH="/usr/local/lib"
 
-# set language environment pariables
-#LC_CTYPE=fr_FR.UTF-8
-#LC_ALL=fr_FR.UTF-8
+# set language environment variables
+LC_CTYPE=fr_FR.UTF-8
+LC_ALL=fr_FR.UTF-8
+
 [[ $TERM != "screen" ]] && exec tmux
