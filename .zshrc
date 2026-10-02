@@ -4,6 +4,11 @@
 # Path to your oh-my-zsh installation.
 export ZSH="/home/jean/.oh-my-zsh"
 
+# Fix 10 secs timeout on vscode environment resolution because of tmux
+if [[ -n "$VSCODE_RESOLVING_ENVIRONMENT" ]]; then
+	return
+fi
+
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
@@ -67,10 +72,14 @@ plugins=(
   zsh-syntax-highlighting
 )
 
+TMUX_AUTOSTART=true
+
 source $ZSH/oh-my-zsh.sh
 fpath+=($HOME/.zsh/pure)
 autoload -U promptinit; promptinit
 prompt pure
+
+setopt NO_BEEP
 
 # User configuration
 
@@ -100,65 +109,49 @@ prompt pure
 # Aliases
 alias trc="python -m serial.tools.miniterm --filter direct -e"
 alias gtkterm="sudo -b gtkterm"
+alias serial="sudo screen /dev/ttyUSB0 115200"
+alias ssh-single="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+alias scp-single="scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+alias vpn-start="sudo wg-quick up wg0"
+alias vpn-stop="sudo wg-quick down wg0"
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 source ~/.vim/plugged/fzf/shell/key-bindings.zsh
 source ~/.vim/plugged/fzf/shell/completion.zsh
 
+source /etc/profile.d/apps-bin-path.sh
+
 # Prevent environment variable concatenation from tmux
 if [[ -z $TMUX ]]; then
-    # Edit PATH
-    export PATH="$PATH:/sbin"
+	# Edit PATH
+	export PATH="$PATH:/sbin"
+	export PATH="$PATH:/usr/local/bin"
+	export PATH="$PATH:/home/jean/.local/bin"
 
-    # Qt 5.15.2
-    export PATH="$PATH:/usr/local/Qt-5.15.2/bin"
-    # QtCreator
-    #export PATH="$PATH:/home/jean/QtCreator/Tools/QtCreator/bin"
+	# Qt
+	#export PATH="$PATH:/usr/local/Qt-6.8.3/bin"
+	#export PATH="$PATH:/home/jean/QtCreator/Tools/QtCreator/bin"
 
-    # OpenJDK
-    #export JAVA_HOME="/usr/local/jdk-14"
-    #export PATH="$PATH:$JAVA_HOME/bin"
-    # Android SDK tools
-    #export ANDROID_HOME="/home/jean/android"
-    #export PATH="$PATH:$ANDROID_HOME/platform-tools"
-    #export PATH="$PATH:$ANDROID_HOME/tools"
-    ## Android NDK
-    #export ANDROID_NDK_HOME="$ANDROID_HOME/ndk-bundle"
-    # Add local openssl
-    #export PATH="/usr/local/opt/openssl/bin:$PATH"
+	# Edit PKG_CONFIG_PATH
+	# Add openssl and libpcap pkg-config
+	export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/opt/openssl/lib/pkgconfig"
+	export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/opt/libpcap/lib/pkgconfig"
+	export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/lib/x86_64-linux-gnu/pkgconfig"
 
-    # Sonar Scanner
-    #export PATH="$PATH:/home/jean/Desktop/sonar-scanner/bin"
+	# Add libpcap flags for compilation
+	export LDFLAGS="-L/usr/local/opt/libpcap/lib"
+	export CPPFLAGS="-I/usr/local/opt/libpcap/include"
 
-    # Edit PKG_CONFIG_PATH
-    # Add openssl and libpcap pkg-config
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/opt/openssl/lib/pkgconfig"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/opt/libpcap/lib/pkgconfig"
-    export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/lib/x86_64-linux-gnu/pkgconfig"
-
-    # Add libpcap flags for compilation
-    export LDFLAGS="-L/usr/local/opt/libpcap/lib"
-    export CPPFLAGS="-I/usr/local/opt/libpcap/include"
-
-    # Edit LD_LIBRARY_PATH
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"/usr/local/lib"
-    # LibXCB
-    #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"/usr/local/Qt-5.15.2/lib"
-    #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"/usr/lib/x86_64-linux-gnu"
-
-    # vim as default editor
-    export VISUAL=vim
-    export EDITOR="$VISUAL"
-
-    # set emsdk environment variables (Qt WebAssembly)
-    #source /home/jean/emsdk/emsdk_env.sh 2>&1 >/dev/null
-    # set FBX SDK environment variables (Qt 3D Studio)
-    #export FBXSDK=$HOME/FBX
+	# vim as default editor
+	export VISUAL=vim
+	export EDITOR="$VISUAL"
 fi
+
 export LD_LIBRARY_PATH="/usr/local/lib"
 
 # set language environment variables
 LC_CTYPE=fr_FR.UTF-8
 LC_ALL=fr_FR.UTF-8
 
-[[ $TERM != "screen" ]] && exec tmux
+[[ $TERM != "tmux-256color" ]] && exec tmux
+

@@ -38,7 +38,7 @@ syntax enable
 set rtp+=~/.fzf
 
 " let g:solarized_termtrans = 1 set background=dark
-colorscheme tokyo-metro
+colorscheme wombat
 
 " autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") &&
 " b:NERDTree.isTabTree()) | q | endif
